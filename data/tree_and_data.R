@@ -1,7 +1,7 @@
-#setwd("/Users/morganfleming/Desktop/Phylomethods/Phylo_Final_Project/data")
-tre<-read.nexus("~/Desktop/Phylomethods/Phylo_Final_Project/data/amphibian_tree.nex")
+#setwd("/Users/morganfleming/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data")
+tree<-read.nexus("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/amphibian_tree.nex")
 
-sals.data<-read.csv("~/Desktop/Phylomethods/Phylo_Final_Project/data/salamanders.csv")
+sals.data<-read.csv("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/salamanders.csv")
 
 sals.data$Genus[which(sals.data$Genus=='Leurognathus')]<-'Desmognathus marmoratus' 
 salamander <- sals.data
@@ -18,10 +18,10 @@ salamander<- salamander[!is.na(salamander$Elevation),]
 
 salamander <- salamander[ ,c("Genus", "Sex", "SVL", "Elevation")]
 
-# #Adults
-# salamander <-salamander[salamander$Sex == "female" | salamander$Sex == "male",]
-# 
-# str(salamander)
-# salamander$Genus <- as.factor(salamander$Genus)
-# salamander$Sex <- as.factor(salamander$Sex)
-# str(salamander)
+#Adults
+salamander <-salamander[salamander$Sex == "female" | salamander$Sex == "male",]
+
+str(salamander)
+salamander$Genus <- as.factor(salamander$Genus)
+salamander$Sex <- as.factor(salamander$Sex)
+str(salamander)

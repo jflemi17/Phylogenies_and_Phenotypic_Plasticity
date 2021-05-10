@@ -4,16 +4,15 @@ output: html_document
 ---
 I am interested in how ecological traits effect diversification and how elevation effects plasticity. Additionally, I am interested in examining how sample size effects the amount of intraspecific variation (i.e. phenotypic plasticity) represented in tips and how sample size effects the evolutionary rates in BM models. Data from type specimens or samples from various populations are often averaged to characterize discrete or continuous traits. However small sample sizes can not capture phenotypic variability within a species that are driven by differences in abiotic and biotic conditions across the species range. James Organ's salamander dataset includes body size measurements from over 12,000 salamanders (7,000 adults) from six elevational transects along Whitetop Mountain and Mt Rogers in the Balsam Mountians of Virginia. This extensive dataset from indivudals all within a small geographic area provides an interesting opportunity to see 1) how sample size effects recorded plasticity/variability for a species and 2) how evolutionary rates change across populations and elevations. 
 
-Getting Data and Pruning Tree
+Getting Data
 ```{r}
-source("~/Desktop/Phylomethods/Phylo_Final_Project/R/packages.R")  
-source("~/Desktop/Phylomethods/Phylo_Final_Project/R/functions.R")
-source("~/Desktop/Phylomethods/Phylo_Final_Project/data/tree_and_data.R") 
+source("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/R/packages.R")  
+source("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/R/functions.R")
+source("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/tree_and_data.R") 
 
 #Data= salamander
-#Tree= tre
-pruned_tree <- PruneTree(tre, salamander)
-VisualizeData(pruned_tree, salamander)
+#Tree= tree
+
 ```
 
 Setting elevations intervals in order to get a plasticity measure for each species at increasing elevations. All samples were subsetted by elevation into three "populations": High, Mid, High. The elevation ranges for each "population" were chosen so as to evenly distribute samples amongst the three groups. In the future, it would liekly be ideal to proportionally devide each species, because some species have more narrow elevational ranges and may be unevenly represented by the current methods. 
@@ -22,7 +21,7 @@ Setting elevations intervals in order to get a plasticity measure for each speci
 
 salamander$elev.class<- c()
 for (i in seq_along(salamander$Genus)){
-  if(salamander$Elevation[i] <= 3900) {salamander$elev.class[i] <- "High"} else {
+  if(salamander$Elevation[i] <= 3900) {salamander$elev.class[i] <- "Low"} else {
     if(salamander$Elevation[i] > 3900 & salamander$Elevation[i] <= 4500){salamander$elev.class[i] <-"Mid"} else 
       if(salamander$Elevation[i] > 4500){salamander$elev.class[i] <- "High"} 
       }
@@ -37,7 +36,7 @@ table(salamander$elev,salamander$Genus)
 
 str(salamander)
 elev.class <- as.factor(salamander$elev.class)
-High.Sals <- salamander[which(salamander$elev.class == c("High")),]; dim(High.Sals)
+Low.Sals <- salamander[which(salamander$elev.class == c("Low")),]; dim(Low.Sals)
 Mid.Sals <- salamander[which(salamander$elev.class == c("Mid")),]; dim(Mid.Sals)
 High.Sals <- salamander[which(salamander$elev.class == c("High")),]; dim(High.Sals)
 
@@ -51,19 +50,34 @@ Low.Pops <- Mean.SD.Species(Low.Sals)
   colnames(Low.Pops)[2] <- "SD.Low"
   colnames(Low.Pops)[3] <- "SVL.Low"
   Low.Pops<- Low.Pops[1:12,]
+  rownames(Low.Pops)<- Low.Pops[,1]
+  Low.Pops<- Low.Pops[,-1]
 Mid.Pops <- Mean.SD.Species(Mid.Sals)
   colnames(Mid.Pops)[2] <- "SD.Mid"
   colnames(Mid.Pops)[3] <- "SVL.Mid"
   Mid.Pops<- Mid.Pops[1:12,]
+  rownames(Mid.Pops)<- Mid.Pops[,1]
+  Mid.Pops<- Mid.Pops[,-1]
 High.Pops <- Mean.SD.Species(High.Sals)
   colnames(High.Pops)[2] <- "SD.High"
   colnames(High.Pops)[3] <- "SVL.High"
+  rownames(High.Pops)<- High.Pops[,1]
+  High.Pops<- High.Pops[,-1]
   
-Intra.comparison <- cbind(Low.Pops, Mid.Pops[,2], Mid.Pops[,3], High.Pops[,2], High.Pops[,3])
-  colnames(Intra.comparison)[4] <- "SD.Mid"
-  colnames(Intra.comparison)[5] <- "SVL.Mid"
-  colnames(Intra.comparison)[6] <- "SD.High"
-  colnames(Intra.comparison)[7] <- "SVL.Mid"
+  
+Intra.comparison <- cbind(Low.Pops, Mid.Pops[,1], Mid.Pops[,2], High.Pops[,1], High.Pops[,2])
+  colnames(Intra.comparison)[3] <- "SD.Mid"
+  colnames(Intra.comparison)[4] <- "SVL.Mid"
+  colnames(Intra.comparison)[5] <- "SD.High"
+  colnames(Intra.comparison)[6] <- "SVL.Mid"
+  
+```
+
+```{r}
+pruned_tree <- PruneTree(tree, Low.Pops)
+VisualizeData(pruned_tree, salamander)
+
+
 ```
 
 BM model to examine continuous variable of SVL 

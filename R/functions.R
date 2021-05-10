@@ -51,20 +51,24 @@ Mean.SD.Species <- function(data){
     avg.svl[i]<-avg.SVL
     pheno.plast[i]<-plasticity 
   }
-  all.dat <- cbind(all.species,pheno.plast, avg.svl)
+  all.dat <- cbind.data.frame(all.species,pheno.plast, avg.svl)
   return(all.dat)
 }
-  
+
+
+
+
+
 
 #Function for pulling random samples 
-Get.subset.sal <- function (data){
-  if (sals.dat[which(sals.dat$Sex=='female')]){
-    female <- sample(1:nrow(sals.dat.size.female$SVL), 5, replace = FALSE)
-  }
-  sal.sub <- subset(sals.dat,Sex=='female', select = SVL)
-  summary(sals.sub[,1:7]) 
-  sub <- sample(1:nrow(sals.dat.size.female$SVL), 5, replace = FALSE)
-  sub
+# Get.subset.sal <- function (data){
+#   if (sals.dat[which(sals.dat$Sex=='female')]){
+#     female <- sample(1:nrow(sals.dat.size.female$SVL), 5, replace = FALSE)
+#   }
+#   sal.sub <- subset(sals.dat,Sex=='female', select = SVL)
+#   summary(sals.sub[,1:7]) 
+#   sub <- sample(1:nrow(sals.dat.size.female$SVL), 5, replace = FALSE)
+#   sub
 
 
 
