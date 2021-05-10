@@ -15,19 +15,19 @@ salamander$gen2[which(salamander$gen2=='Eurycea_bislineata_')] <- 'Eurycea_bisli
 salamander$gen2[which(salamander$gen2=='Plethodon_glutinosis')] <- 'Plethodon_glutinosus'
 salamander<-salamander[!(salamander$gen2=="Desmognathus_ochrophaeus"),]
 
-unique(salamander$Genus)
-
 salamander<- salamander[!is.na(salamander$Elevation),]
+salamander<- salamander[!(salamander$gen2 == "Plethodon_welleri"),]
+salamander<- salamander[!(salamander$gen2 == "Pseudotriton_ruber"),]
+salamander<- salamander[!(salamander$gen2 == "Desmognathus_marmoratus"),]
 
-salamander <- salamander[ ,c("Genus", "Sex", "SVL", "Elevation")]
+salamander <- salamander[ ,c("gen2", "Sex", "SVL", "Elevation")]
 
 #Adults
 salamander <-salamander[salamander$Sex == "female" | salamander$Sex == "male",]
 
 str(salamander)
-salamander$Genus <- as.factor(salamander$Genus)
+salamander$gen2 <- as.factor(salamander$gen2)
 salamander$Sex <- as.factor(salamander$Sex)
-str(salamander)
 
-salamander$Genus<-gsub(' ', '_',salamander$Genus)
-head(salamander)
+unique(salamander$gen2)
+

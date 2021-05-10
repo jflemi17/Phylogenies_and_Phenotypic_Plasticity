@@ -1,21 +1,12 @@
 #Prune Tree
 PruneTree <- function( phy, data){
   tk <- which(phy$tip.label%in%data[,1]=='TRUE')
-  tr2 <- keep.tip(phy, tk) ## 14 tips
+  tr2 <- keep.tip(phy, tk) 
   #plot(tr2)
   return(tr2)
 }
 
-#   tk <- ape::drop.tip(tree, tree$tip.label[!(tree$tip.label %in% salamander=='TRUE' )])
-#   plot(tk)
-#   return(tk)
-#   plot_tree(tree)
-# 
-#   tk <- which(tree$tip.label%in%salamander[,1]=='TRUE')
-#   tr2 <- keep.tip(tree, tk) ## 14 tips
-#   plot(tr2)
-# 
-# head(tree$tip.label)
+
 
 #Visualize Data 
 VisualizeData <- function(phy, data) {
@@ -54,7 +45,7 @@ Mean.SD.Species <- function(data){
   pheno.plast<- c()
   avg.svl<- c()
   all.species<- unique(data[,1])
-  for(i in 1:length(unique(data$Genus))){
+  for(i in 1:length(unique(data$gen2))){
     species<- unique(data[,1])[i]
     spec <- data[which(data[,1]==species),]
     avg.SVL <-round(mean(spec$SVL))

@@ -16,7 +16,8 @@ source("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/tree_a
 class(tree)
 class(salamander)
 pruned_tree <- PruneTree(tree,salamander)
-VisualizeData(pruned_tree.Low.elev, Low.Pops.sd)
+VisualizeData(pruned_tree, salamander)
+print(pruned_tree)
 
 
 ```
@@ -26,7 +27,7 @@ Setting elevations intervals in order to get a plasticity measure for each speci
 #Set.Elevation.Interval.Group(salamander)
 
 salamander$elev.class<- c()
-for (i in seq_along(salamander$Genus)){
+for (i in seq_along(salamander$gen2)){
   if(salamander$Elevation[i] <= 3900) {salamander$elev.class[i] <- "Low"} else {
     if(salamander$Elevation[i] > 3900 & salamander$Elevation[i] <= 4500){salamander$elev.class[i] <-"Mid"} else 
       if(salamander$Elevation[i] > 4500){salamander$elev.class[i] <- "High"} 
@@ -34,10 +35,10 @@ for (i in seq_along(salamander$Genus)){
     }
   
   
-salamander$elev
+salamander$elev.class
 unique(salamander$elev)
 table(salamander$elv)
-table(salamander$elev,salamander$Genus)
+table(salamander$elev,salamander$gen2)
 
 
 str(salamander)
@@ -50,18 +51,16 @@ High.Sals <- salamander[which(salamander$elev.class == c("High")),]; dim(High.Sa
 ```
 
 ##
-Now each salamander entry has been assigned to a High, Mid, or High population. BeHigh is a comparison of the mean and standard deviation of SVL (snout-vent-length) of each species within each population. The idea is to compare intraspecific differences across the High, Mid, and High populations and then see if there are similar trends across species. 
+Now each salamander entry has been assigned to a High, Mid, or High population. This is a comparison of the mean and standard deviation of SVL (snout-vent-length) of each species within each population. The idea is to compare intraspecific differences across the High, Mid, and High populations and then see if there are similar trends across species. 
 ```{r}
 Low.Pops <- Mean.SD.Species(Low.Sals)
   colnames(Low.Pops)[2] <- "SD.Low"
   colnames(Low.Pops)[3] <- "SVL.Low"
-  Low.Pops<- Low.Pops[1:12,]
   rownames(Low.Pops)<- Low.Pops[,1]
   Low.Pops<- Low.Pops[,-1] 
 Mid.Pops <- Mean.SD.Species(Mid.Sals)
   colnames(Mid.Pops)[2] <- "SD.Mid"
   colnames(Mid.Pops)[3] <- "SVL.Mid"
-  Mid.Pops<- Mid.Pops[1:12,]
   rownames(Mid.Pops)<- Mid.Pops[,1]
   Mid.Pops<- Mid.Pops[,-1]
 High.Pops <- Mean.SD.Species(High.Sals)
@@ -84,73 +83,47 @@ Intra.comparison <- cbind(Low.Pops, Mid.Pops[,1], Mid.Pops[,2], High.Pops[,1], H
 BM model to examine continuous variable of SVL 
 ```{r}
 ############ Low Elevation Populations #################
+Low.test<- Low.Pops$SD.Low
+names(Low.test) <- pruned_tree$tip.label
+contMap(pruned_tree,named.vector,lwd=2,res=200,legend=.5, fsize=.6)
 
-Mid.Pops.sd <- Mid.Pops[,-2, drop=FALSE]
-Mid.test <- as.vector(Mid.Pops.sd)
-str(Mid.test)
-dim(Mid.test)
-length(pruned_tree$tip.label)
-
-pruned_tree.Low.elev <- PruneTree(tree, Low.test)
-VisualizeData(pruned_tree.Low.elev, Low.Pops.sd)
-
-str(Low.Pops.sd)
-new<- as.data.frame(names = row.names(Low.Pops.sd), Low.Pops.sd)
-test <- as.vector(Low.Pops.sd)
-str(test)
-length(test)
-length(pruned_tree.Low.elev$tip.label)
-
-phytools::contMap(pruned_tree.Low.elev, elev.avg[,1])
-
-BM1.Low <- geiger::fitContinuous(pruned_tree.Low.elev, Low.Pops.sd, model="BM") 
-print(BM1)
+BM1.Low <- geiger::fitContinuous(pruned_tree, Low.test, model="BM") 
+print(BM1.Low)
 
 
 ############ Mid Elevation Populations #################
+Mid.test<- Mid.Pops$SD.Mid
+names(Mid.test) <- pruned_tree$tip.label
+contMap(pruned_tree,named.vector,lwd=2,res=200,legend=.5, fsize=.6)
 
-Mid.Pops.sd <- Mid.Pops[,1:2]
-
-pruned_tree.Mid.elev <- PruneTree(tre, Mid.Pops.sd)
-VisualizeData(pruned_tree.Mid.elev, Mid.Pops.sd)
-
-str(Mid.Pops.sd)
-new<- as.data.frame(names = row.names(Mid.Pops.sd), Mid.Pops.sd)
-test <- as.vector(Mid.Pops.sd)
-str(test)
-length(test)
-length(pruned_tree.Mid.elev$tip.label)
-
-phytools::contMap(pruned_tree.Mid.elev, elev.avg[,1])
-
-BM1.Mid <- geiger::fitContinuous(pruned_tree.Mid.elev, Mid.Pops.sd, model="BM") 
-print(BM1)
-
-
-
+BM1.Mid <- geiger::fitContinuous(pruned_tree, Mid.test, model="BM") 
+print(BM1.Mid)
 
 ############ High Elevation Populations #################
+High.test<- High.Pops$SD.High
+names(High.test) <- pruned_tree$tip.label
+contMap(pruned_tree,named.vector,lwd=2,res=200,legend=.5, fsize=.6)
 
-High.Pops.sd <- High.Pops[,1:2]
+BM1.High <- geiger::fitContinuous(pruned_tree, High.test, model="BM") 
+print(BM1.High)
 
-pruned_tree.High.elev <- PruneTree(tre, High.Pops.sd)
-VisualizeData(pruned_tree.High.elev, High.Pops.sd)
 
-str(High.Pops.sd)
-new<- as.data.frame(names = row.names(High.Pops.sd), High.Pops.sd)
-test <- as.vector(High.Pops.sd)
-str(test)
-length(test)
-length(pruned_tree.High.elev$tip.label)
 
-phytools::contMap(pruned_tree.High.elev, elev.avg[,1])
+```
+```{r}
+AIC.BM1.Low <- AIC(BM1.Low)
+AIC.BM1.Mid <- AIC(BM1.Mid)
+AIC.BM1.High<- AIC(BM1.High)
 
-BM1.High <- geiger::fitContinuous(pruned_tree.High.elev, High.Pops.sd, model="BM") 
-print(BM1)
+
+##Evolutionary rates differ across populations and the middle elevation populations does the best job at fitting the tree we are using here. 
 
 ```
 
-Subsetting random samples from each elevation. Work in progress. 
+
+
+
+Subsetting random samples from each elevation. Goal: see how taking random samples of different sizes effects differences in evolutionary rate across populations. Work in progress. 
 ```{r}
 Get.subset.sal <- function (data){
   if (sals.dat[which(sals.dat$Sex=='female')]){
@@ -161,7 +134,7 @@ Get.subset.sal <- function (data){
   sub <- sample(1:nrow(sals.dat.size.female$SVL), 5, replace = FALSE)
   sub
 
-
+```
 
 
 
