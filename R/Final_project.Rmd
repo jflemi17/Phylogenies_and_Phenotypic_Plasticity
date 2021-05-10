@@ -13,6 +13,12 @@ source("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/tree_a
 #Data= salamander
 #Tree= tree
 
+class(tree)
+class(salamander)
+pruned_tree <- PruneTree(tree,salamander)
+VisualizeData(pruned_tree.Low.elev, Low.Pops.sd)
+
+
 ```
 
 Setting elevations intervals in order to get a plasticity measure for each species at increasing elevations. All samples were subsetted by elevation into three "populations": High, Mid, High. The elevation ranges for each "population" were chosen so as to evenly distribute samples amongst the three groups. In the future, it would liekly be ideal to proportionally devide each species, because some species have more narrow elevational ranges and may be unevenly represented by the current methods. 
@@ -51,7 +57,7 @@ Low.Pops <- Mean.SD.Species(Low.Sals)
   colnames(Low.Pops)[3] <- "SVL.Low"
   Low.Pops<- Low.Pops[1:12,]
   rownames(Low.Pops)<- Low.Pops[,1]
-  Low.Pops<- Low.Pops[,-1]
+  Low.Pops<- Low.Pops[,-1] 
 Mid.Pops <- Mean.SD.Species(Mid.Sals)
   colnames(Mid.Pops)[2] <- "SD.Mid"
   colnames(Mid.Pops)[3] <- "SVL.Mid"
@@ -73,20 +79,19 @@ Intra.comparison <- cbind(Low.Pops, Mid.Pops[,1], Mid.Pops[,2], High.Pops[,1], H
   
 ```
 
-```{r}
-pruned_tree <- PruneTree(tree, Low.Pops)
-VisualizeData(pruned_tree, salamander)
 
-
-```
 
 BM model to examine continuous variable of SVL 
 ```{r}
 ############ Low Elevation Populations #################
 
-Low.Pops.sd <- Low.Pops[,1:2]
+Mid.Pops.sd <- Mid.Pops[,-2, drop=FALSE]
+Mid.test <- as.vector(Mid.Pops.sd)
+str(Mid.test)
+dim(Mid.test)
+length(pruned_tree$tip.label)
 
-pruned_tree.Low.elev <- PruneTree(tre, Low.Pops.sd)
+pruned_tree.Low.elev <- PruneTree(tree, Low.test)
 VisualizeData(pruned_tree.Low.elev, Low.Pops.sd)
 
 str(Low.Pops.sd)

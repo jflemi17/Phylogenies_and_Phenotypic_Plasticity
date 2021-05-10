@@ -3,6 +3,9 @@ tree<-read.nexus("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/d
 
 sals.data<-read.csv("~/Desktop/Phylomethods/Phylogenies_and_Phenotypic_Plasticity/data/salamanders.csv")
 
+
+
+
 sals.data$Genus[which(sals.data$Genus=='Leurognathus')]<-'Desmognathus marmoratus' 
 salamander <- sals.data
 salamander$gen2<-gsub(' ', '_',salamander$Genus)
@@ -25,3 +28,6 @@ str(salamander)
 salamander$Genus <- as.factor(salamander$Genus)
 salamander$Sex <- as.factor(salamander$Sex)
 str(salamander)
+
+salamander$Genus<-gsub(' ', '_',salamander$Genus)
+head(salamander)

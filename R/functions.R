@@ -2,9 +2,20 @@
 PruneTree <- function( phy, data){
   tk <- which(phy$tip.label%in%data[,1]=='TRUE')
   tr2 <- keep.tip(phy, tk) ## 14 tips
-  plot(tr2)
+  #plot(tr2)
   return(tr2)
 }
+
+#   tk <- ape::drop.tip(tree, tree$tip.label[!(tree$tip.label %in% salamander=='TRUE' )])
+#   plot(tk)
+#   return(tk)
+#   plot_tree(tree)
+# 
+#   tk <- which(tree$tip.label%in%salamander[,1]=='TRUE')
+#   tr2 <- keep.tip(tree, tk) ## 14 tips
+#   plot(tr2)
+# 
+# head(tree$tip.label)
 
 #Visualize Data 
 VisualizeData <- function(phy, data) {
